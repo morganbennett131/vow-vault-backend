@@ -42,13 +42,17 @@ export default async function handler(req, res) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      success_url: "https://example.com/success",
-      cancel_url: "https://example.com/cancel",
+
+      // ✅ UPDATED HERE
+      success_url: "https://www.vow-vault.com?payment=success",
+      cancel_url: "https://www.vow-vault.com?payment=cancel",
+
       client_reference_id: String(orderId),
       metadata: {
         orderId: String(orderId),
         buyerUID: String(buyerUID),
       },
+
       line_items: [
         {
           price_data: {
