@@ -1,0 +1,7 @@
+{
+  "name": "vow-vault-backend",
+  "version": "1.0.0",
+  "dependencies": {
+    "stripe": "^18.0.0"
+  }
+}
