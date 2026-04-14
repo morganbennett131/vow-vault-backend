@@ -12,19 +12,13 @@ export default async function handler(req, res) {
     const { orderId, buyerUID, amount } = body || {};
 
     if (!orderId || !buyerUID || !amount) {
-      return res.status(400).json({
-        error: "Missing required fields",
-        debug: { orderId, buyerUID, amount }
-      });
+      return res.status(400).send("Missing required fields");
     }
 
     const unitAmount = Math.round(Number(amount));
 
     if (!Number.isFinite(unitAmount) || unitAmount <= 0) {
-      return res.status(400).json({
-        error: "Invalid amount",
-        debug: { amount, unitAmount }
-      });
+      return res.status(400).send("Invalid amount");
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -50,13 +44,9 @@ export default async function handler(req, res) {
       ],
     });
 
-    return res.status(200).json({ url: session.url });
+    return res.status(200).send(session.url);
   } catch (err) {
     console.error("Stripe session error:", err);
-    return res.status(500).json({
-      error: err?.message || "Error creating session",
-      type: err?.type || null,
-      code: err?.code || null,
-    });
+    return res.status(500).send(err?.message || "Error creating session");
   }
 }
