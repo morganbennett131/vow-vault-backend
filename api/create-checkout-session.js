@@ -3,13 +3,12 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
   try {
-    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-    const { orderId, buyerUID, amount } = body || {};
+    const source = req.method === "GET" ? req.query : (typeof req.body === "string" ? JSON.parse(req.body) : req.body);
+
+    const orderId = source?.orderId;
+    const buyerUID = source?.buyerUID;
+    const amount = source?.amount;
 
     if (!orderId || !buyerUID || !amount) {
       return res.status(400).send("Missing required fields");
